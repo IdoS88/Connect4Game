@@ -1,0 +1,67 @@
+﻿@page
+@model Server.Pages.Queries.Q8Model
+
+@{
+    ViewData["Title"] = "Q8";
+}
+
+<h1>Q8</h1>
+
+<br />
+<br />
+
+<a asp-page="../Index">Back To Login Welcome Page</a> | <a asp-page="./Queries">Back To Queries</a>
+
+<br />
+
+
+<h1>List of games played counts for each players with details</h1>
+<br />
+<br />
+@for (int i = 0; i < Model.MaxCountries; i++)
+{
+    <h3>@Html.DisplayFor(model=>model.CountryNames[i])</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.PlayersByCountry[i][0].CountrySelection)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PlayersByCountry[i][0].Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PlayersByCountry[i][0].Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PlayersByCountry[i][0].Phone)
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.PlayersByCountry[i])
+            {
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CountrySelection)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}

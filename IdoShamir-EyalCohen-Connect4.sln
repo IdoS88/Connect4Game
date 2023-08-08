@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "WebApplication1\Server.csproj", "{45EA84CA-A8D4-42EE-BD93-7350F417BDCE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "ConnectFourGame\Client.csproj", "{5CC331B8-F4B9-47C5-9764-5AD3F59223F9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{45EA84CA-A8D4-42EE-BD93-7350F417BDCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45EA84CA-A8D4-42EE-BD93-7350F417BDCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45EA84CA-A8D4-42EE-BD93-7350F417BDCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45EA84CA-A8D4-42EE-BD93-7350F417BDCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CC331B8-F4B9-47C5-9764-5AD3F59223F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CC331B8-F4B9-47C5-9764-5AD3F59223F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CC331B8-F4B9-47C5-9764-5AD3F59223F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CC331B8-F4B9-47C5-9764-5AD3F59223F9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9BDE1ECB-9A5B-41EC-A87A-8485078BD39F}
+	EndGlobalSection
+EndGlobal

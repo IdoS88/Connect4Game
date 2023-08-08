@@ -1,0 +1,85 @@
+﻿@page
+@model Server.Pages.Queries.Q5Model
+
+@{
+    ViewData["Title"] = "Q5";
+}
+
+<h1>Q5</h1>
+<br />
+<br />
+
+<a asp-page="../Index">Back To Login Welcome Page</a> | <a asp-page="./Queries">Back To Queries</a>
+
+<br />
+<h3>Please Select a player from the list </h3>
+<br />
+
+<h1>List of games played by specific player</h1>
+<br />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                @Html.DropDownListFor(model => model.SelectedPlayerName, new SelectList(Model.PlayerTable), "Select Player", new { @class = "form-control" })
+                <br>
+                <span asp-validation-for="@Model.SelectedPlayerName" class=" text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Show List" class="btn btn-primary" />
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GameId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].DateInit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].TimePlayed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GameStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Game)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GameId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateInit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimePlayed)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GameStatus)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.GameId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.GameId">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.GameId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
