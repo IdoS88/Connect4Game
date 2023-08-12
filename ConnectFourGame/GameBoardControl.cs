@@ -141,7 +141,7 @@ namespace Client
                 if (computerMove != -1)
                 {
                     
-                    DropDisc(computerMove,"Player 1");
+                    DropDisc(computerMove,"Computer",0);
                    
                 }
                 else
@@ -268,12 +268,12 @@ namespace Client
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO GameRecords (PlayerName, StartTime, Duration, GameMoves) " +
-                               "VALUES (@PlayerName, @StartTime, @Duration, @GameMoves)";
+                string query = "INSERT INTO GameRecords (PlayerID, StartTime, Duration, GameMoves) " +
+                               "VALUES (@PlayerID, @StartTime, @Duration, @GameMoves)";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@PlayerName", gameRecord.PlayerName);
+                    command.Parameters.AddWithValue("@PlayerID", gameRecord.PlayerID);
                     command.Parameters.AddWithValue("@StartTime", gameRecord.StartTime);
                     command.Parameters.AddWithValue("@Duration", gameRecord.Duration);
                     command.Parameters.AddWithValue("@GameMoves", gameRecord.GameMoves);
@@ -290,7 +290,7 @@ namespace Client
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     // Create the SQL query to insert the data into the table
-                    string query = "INSERT INTO GameTable (PlayerId,DateInit,TimePlayed,GameStatus) VALUES (@PlayerId,@DateInit,@TimePlayed,@GameStatus)";
+                    string query = "INSERT INTO Game (PlayerId,DateInit,TimePlayed,GameStatus) VALUES (@PlayerId,@DateInit,@TimePlayed,@GameStatus)";
 
                     using (SqlCommand command = new SqlCommand(query, conn))
                     {
@@ -310,7 +310,7 @@ namespace Client
 
         }
 
-        public void DropDisc(int column, string name)
+        public void DropDisc(int column, string name,int id)
         {
             if (isAnimating || column < 0 || column >= Columns)
             {
@@ -359,7 +359,7 @@ namespace Client
                 string gameMovesString = string.Join(",", colMoves);
                 GameRecords gameRecord = new GameRecords
                 {
-                    PlayerName = name,
+                    PlayerID = id,
                     StartTime = DateTime.Now,
                     Duration = (int)gameDuration,
                     GameMoves = gameMovesString
@@ -398,7 +398,6 @@ namespace Client
                     }
                 }
             }
-
         }
 
 

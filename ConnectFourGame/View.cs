@@ -34,7 +34,7 @@ namespace Client
             gameTimer = new Stopwatch();
         }
 
-        private void AddButtonsToPanel(int colLoad ,string name)
+        private void AddButtonsToPanel(int colLoad ,string name,int id)
         {
             int loadCol = colLoad;
             if (!String.IsNullOrEmpty(name) || name == "loadGame")
@@ -50,7 +50,7 @@ namespace Client
                     {
                         int column = Array.IndexOf(pnlButtons.Controls.OfType<Button>().ToArray(), (Button)sender);
 
-                        gameBoardControl1.DropDisc(column, name);    
+                        gameBoardControl1.DropDisc(column, name,id);    
                     };
                     // Add the button to the panel
                     pnlButtons.Controls.Add(button);
@@ -58,7 +58,7 @@ namespace Client
             }
             if (colLoad != -1)
             {
-                gameBoardControl1.DropDisc(loadCol, "loadGame");
+                gameBoardControl1.DropDisc(loadCol, "loadGame",id);
             }
 
         }
@@ -128,11 +128,11 @@ namespace Client
                         //gameBoardControl1.MoveCount++;
                         if (gameBoardControl1.currentPlayer == 1)
                         {
-                            AddButtonsToPanel(column, "loadGame");
+                            AddButtonsToPanel(column, "loadGame", id);
                         }
                         else
                         {
-                            gameBoardControl1.DropDisc(column, "loadGame");
+                            gameBoardControl1.DropDisc(column, "loadGame", id);
                         }
                         
                     }                   
@@ -158,6 +158,7 @@ namespace Client
                     // Retrieve the input from the input form
                     name = inputForm.GetName();
                     id = inputForm.getID();
+                    Console.WriteLine(id);
 
                     // Validate the input
                     if (!string.IsNullOrEmpty(name) && name.Length > 0 && !int.TryParse(name, out _))
@@ -172,7 +173,7 @@ namespace Client
                         else
                         {
                             // Start the game or perform further actions with the name
-                            AddButtonsToPanel(-1,name);
+                            AddButtonsToPanel(-1,name,id);
                         }
                     }
                     else
@@ -184,7 +185,7 @@ namespace Client
                 }
             }
 
-             AddButtonsToPanel(-1,name);
+             AddButtonsToPanel(-1,name, id);
              
               
         }

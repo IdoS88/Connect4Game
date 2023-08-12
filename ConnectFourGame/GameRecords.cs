@@ -12,7 +12,7 @@ namespace Client
         
 
         public int GameRecordId { get; set; }
-        public string PlayerName { get; set; }
+        public int PlayerID { get; set; }
         public DateTime StartTime { get; set; }
         public int Duration { get; set; }
         public string GameMoves { get; set; }
@@ -36,7 +36,7 @@ namespace Client
                             GameRecords gameRecord = new GameRecords
                             {
                                 GameRecordId = (int)reader["GameRecordId"],
-                                PlayerName = (string)reader["PlayerName"],
+                                PlayerID = (int)reader["PlayerID"],
                                 StartTime = (DateTime)reader["StartTime"],
                                 Duration = (int)reader["Duration"],
                                 GameMoves = (string)reader["GameMoves"]

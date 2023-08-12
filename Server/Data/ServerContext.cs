@@ -20,6 +20,5 @@ namespace IdoShamir_EyalCohen_Connect4.Data
         public DbSet<Game> Game { get; set; } = default!;
 
 
-
     }
 }
