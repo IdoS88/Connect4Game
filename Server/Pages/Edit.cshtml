@@ -1,0 +1,48 @@
+﻿@page
+@model IdoShamir_EyalCohen_Connect4.Pages.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>NewPlayerRegister</h4>
+<br />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UpdateUserInstance.Name" class="control-label"></label>
+                <input asp-for="@Model.UpdateUserInstance.Name" class="form-control" />
+                <span asp-validation-for="UpdateUserInstance.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdateUserInstance.Phone" class="control-label"></label>
+                <input asp-for="@Model.UpdateUserInstance.Phone" class="form-control" />
+                <span asp-validation-for="@Model.UpdateUserInstance.Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdateUserInstance.CountrySelection" class="control-label"></label>
+                        <br />
+                @Html.DropDownListFor(m=>m.UpdateUserInstance.CountrySelection, new SelectList(Model.Names))
+                <br>
+                <span asp-validation-for="@Model.UpdateUserInstance.CountrySelection" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to User Login Page</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

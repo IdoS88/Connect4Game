@@ -12,7 +12,7 @@ namespace Client
 {
     public partial class LoadGames : Form
     {
-        internal GameBoardState SelectedGameBoardState { get; private set; }
+         public string[] SelectedGameBoardState { get; private set; }
 
         public LoadGames()
         {
@@ -51,8 +51,9 @@ namespace Client
 
         }
 
-        private async void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
+            
             if (listBoxGames.SelectedItem != null)
             {
                 // Parse the selected game record to get the GameId
@@ -60,12 +61,12 @@ namespace Client
                 int gameId = int.Parse(selectedText.Substring("Game ID: ".Length, selectedText.IndexOf(",") - "Game ID: ".Length));
 
                 // Retrieve game board state and animation details using gameId
-                GameBoardState gameBoardState = gameBoardControl.GetGameBoardState(gameId);
+                string[] gameBoardState = gameBoardControl.GetGameBoardState(gameId);
 
                 if (gameBoardState != null)
                 {
-                    SelectedGameBoardState = gameBoardState; 
-                    DialogResult = DialogResult.OK; 
+                    SelectedGameBoardState = gameBoardState;
+                    DialogResult = DialogResult.OK;
                 }
                 else
                 {

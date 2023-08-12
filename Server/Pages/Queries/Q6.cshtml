@@ -1,0 +1,51 @@
+﻿@page
+@model IdoShamir_EyalCohen_Connect4.Pages.Queries.Q6Model
+
+@{
+    ViewData["Title"] = "Q6";
+}
+
+<h1>Q6</h1>
+<br />
+<br />
+
+<a asp-page="../Index">Back To Login Welcome Page</a> | <a asp-page="./Queries">Back To Queries</a>
+
+<br />
+
+
+<h1>List of each player's games count</h1>
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Players[0].PlayerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Players[0].GamesCount)
+            </th>
+            <th>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Players) {
+        <tr>
+            <td>
+                    @Html.DisplayFor(modelItem => item.PlayerId)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.GamesCount)
+            </td>
+            <td>
+                    <a asp-page="./Edit" asp-route-id="@item.PlayerId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.PlayerId">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.PlayerId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

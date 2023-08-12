@@ -23,13 +23,13 @@ namespace Client
         public const int Padding = 10;
 
         private int[,] board; // 2D array to keep track of the state of each cell
-        public int currentPlayer;
+        public int currentPlayer = 1;
         private Stopwatch gameTimer;
 
-        private int MoveCount = 0;
+        private int MoveCount = 1;
 
         //animation
-        private bool isAnimating = false;
+        public bool isAnimating { get; set; }
         private int animationRow = 6;
         private int animationColumn = 7;
 
@@ -38,12 +38,13 @@ namespace Client
         private Timer computerMoveTimer;
 
         private Random random = new Random();
-        private bool gameEnded = false;
+        public bool gameEnded { get; set; }
         private DateTime gameStartTime;
 
         List<int> colMoves = new List<int>();
+        string[] moves;
 
-        private const int AnimationInterval = 300; // Adjust this value for the animation speed
+        private const int AnimationInterval = 100; // Adjust this value for the animation speed
         string connectionString = "Data Source = localhost\\MSSQLSERVER01;Initial Catalog = ServerDB; Integrated Security = True";
 
   
@@ -58,6 +59,7 @@ namespace Client
             this.Width = boardWidth;
             this.Height = boardHeight;
             this.currentPlayer = currentPlayer;
+            isAnimating = false;
 
             board = new int[Rows, Columns];
             DoubleBuffered = true;
@@ -71,20 +73,23 @@ namespace Client
             animationTimer.Start();
 
             computerMoveTimer = new Timer();
-            computerMoveTimer.Interval = 500; // Set the interval (1 second in this example)
+            computerMoveTimer.Interval = 100; // Set the interval (1 second in this example)
             computerMoveTimer.Tick += ComputerMoveTimer_Tick;
             computerMoveTimer.Start();
 
             gameStartTime = DateTime.Now;
 
+
         }
 
 
-
-
-
+        
         private void AnimationTimer_Tick(object sender, EventArgs e)
         {
+            if (gameEnded)
+            {
+                return;
+            }
             // Update the animation position and invalidate to trigger redraw
             if (isAnimating)
             {
@@ -97,7 +102,6 @@ namespace Client
                     // Animation complete, update the board and stop the animation
                     isAnimating = false;
                     board[animationRow, animationColumn] = (MoveCount % 2 == 0) ? 1 : 2;
-                    MoveCount++;
                     Invalidate();
                 }
                 else
@@ -111,33 +115,34 @@ namespace Client
                     {
                         animationRow--;
                     }
-
                     // Invalidate to continue animation
                     Invalidate();
                 }
             }
+           
         }
-
+         
         private void ComputerMoveTimer_Tick(object sender, EventArgs e)
         {
-            if (gameEnded
-                ) 
+            if (gameEnded) 
             {
                 return;
             }
             // Check if it's currently the computer's turn
-            if (currentPlayer == 1)
+            if (currentPlayer == 2)
             {
-                // Stop the timer during the computer's turn to avoid overlapping moves
-                computerMoveTimer.Stop();
-
+                
+                //isAnimating = true;
+                //animationRow = 0;
+                
                 // Make a move for the computer player
                 int computerMove = GetRandomComputerMove(board);
 
                 if (computerMove != -1)
                 {
-                    DropDisc(computerMove,"Player 1");
                     
+                    DropDisc(computerMove,"Player 1");
+                   
                 }
                 else
                 {
@@ -146,13 +151,10 @@ namespace Client
                     // Reset the game or take any other necessary actions
                     return;
                 }
-
-
-                // Restart the timer after the computer's move
-                computerMoveTimer.Start();
-            }
-            
+            }  
         }
+        
+   
         private double GetGameDuration()
         {
             return gameTimer.Elapsed.TotalSeconds;
@@ -164,18 +166,15 @@ namespace Client
             // Generate a list of available columns where the computer can drop its disc
             List<int> availableColumns = new List<int>();
             for (int col = 0; col < Columns; col++)
-            {
-                
+            {  
                 if (GetNextAvailableColumn(col) != -1)
                 {
                     availableColumns.Add(col);
                 }
             }
-
             if (availableColumns.Count > 0)
             {
                 // Randomly select one column from the list of available columns
-                
                 int randomIndex = random.Next(0, availableColumns.Count);
                 return availableColumns[randomIndex];
             }
@@ -223,7 +222,7 @@ namespace Client
                     if (board[row, col] == 0)
                     {
                         // Empty cell
-                        g.FillRectangle(Brushes.White, rect);
+                        g.FillRectangle(Brushes.LightGray, rect);
                     }
                     else if (board[row, col] == 1)
                     {
@@ -241,10 +240,8 @@ namespace Client
                 }
             }
 
-            
-
             // Draw the animated disc if it's in the middle of an animation
-            if (isAnimating)
+            if (isAnimating && !gameEnded)
             {
                 int x = horizontalOffset + animationColumn * (CellSize + Padding);
                 int y = verticalOffset + animationRow * (CellSize + Padding);
@@ -255,6 +252,7 @@ namespace Client
                 {
                     // Player 1's disc (e.g., red)
                     g.FillEllipse(Brushes.Red, rect);
+
                 }
                 else
                 {
@@ -262,8 +260,6 @@ namespace Client
                     g.FillEllipse(Brushes.Yellow, rect);
                 }
             }
-
-
         }
 
         public void SaveGameRecord(GameRecords gameRecord)
@@ -281,7 +277,6 @@ namespace Client
                     command.Parameters.AddWithValue("@StartTime", gameRecord.StartTime);
                     command.Parameters.AddWithValue("@Duration", gameRecord.Duration);
                     command.Parameters.AddWithValue("@GameMoves", gameRecord.GameMoves);
-
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
@@ -303,7 +298,6 @@ namespace Client
                         command.Parameters.AddWithValue("@DateInit", gameStartTime);
                         command.Parameters.AddWithValue("@TimePlayed", gameDuration);
                         command.Parameters.AddWithValue("@GameStatus", "WINS");
-
                         conn.Open();
                         command.ExecuteNonQuery();
                     }
@@ -332,15 +326,16 @@ namespace Client
                 return;
             }
 
+
             // Determine the current player (assuming player 1 goes first, and then players alternate)
             currentPlayer = (MoveCount % 2 == 0) ? 1 : 2;
-
-
+            Console.WriteLine("Current Player: " + currentPlayer); // Add this line
 
             // Record the move in colMoves
             colMoves.Add(column);   
 
             // Start the animation
+            gameEnded = false;
             isAnimating = true;
             animationRow = 0;
             animationColumn = column;
@@ -348,13 +343,16 @@ namespace Client
             // Trigger the Paint event to redraw the game board
             Invalidate();
 
+            string loadChecker = "loadGame";
 
             // Check for a win after updating the board and recording the move
-            if (CheckWin(currentPlayer))
+            if (name != loadChecker && CheckWin(currentPlayer) )
             {
                 gameEnded = true;
+
                 string winner = (currentPlayer == 1) ? "Player 1" : "Computer";
                 MessageBox.Show($"{winner} wins!", "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
                 double gameDuration = GetGameDuration();
                 StoreGameDuration(gameDuration);
 
@@ -368,12 +366,16 @@ namespace Client
                 };
 
                 SaveGameRecord(gameRecord);
+                ResetGame();
                 colMoves.Clear();
+                
             }
+            MoveCount++;
         }
 
-        internal GameBoardState GetGameBoardState(int gameId)
+        internal string[] GetGameBoardState(int gameId)
         {
+           
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = "SELECT GameMoves FROM GameRecords WHERE GameRecordId = @GameRecordId";
@@ -387,85 +389,17 @@ namespace Client
                     {
                         if (reader.Read())
                         {
-                            string gameMoves = reader.GetString(0); //0,
+                            string gameMoves = reader.GetString(0);
 
                             // Split the GameMoves string to get individual moves
-                            string[] moves = gameMoves.Split(',');
-
-                            // Create a new game board state and animation details
-                            int[,] boardState = new int[Rows, Columns];
-                            int moveCount = 0;
-
-                            // Iterate through the moves and reconstruct the game board state
-                            foreach (string move in moves)
-                            {
-                                int column = int.Parse(move);
-
-                                int row = GetNextAvailableRow(column);
-
-                                if (row != -1)
-                                {
-                                    // Update the board state
-                                    boardState[row, column] = (moveCount % 2 == 0) ? 1 : 2;
-                                    moveCount++;
-                                }
-                            }
-
-                            // Create and return a GameBoardState object
-                            return new GameBoardState
-                            {
-                                BoardState = boardState,
-                                AnimationColumn = moves.Length - 1, // The last move's column
-                                AnimationRow = GetNextAvailableRow(moves.Length - 1) - 1 // The row above the last move
-                            };
+                            moves = gameMoves.Split(',');
                         }
+                        return moves;
                     }
                 }
             }
 
-            // Return null if no data is found for the given gameId
-            return null;
         }
-
-        internal async Task RestoreGameAndAnimateMoves(GameBoardState gameBoardState)
-        {
-            int[,] boardState = gameBoardState.BoardState;
-            //int animationColumn = gameBoardState.AnimationColumn;
-            //int animationRow = gameBoardState.AnimationRow;
-
-            // Reset the game state (clear the board and counters)
-            ResetGame();
-
-            for (int col = 0; col <= gameBoardState.AnimationColumn; col++)
-            {
-                int targetRow = GetNextAvailableRow(col);
-
-                if (targetRow != -1)
-                {
-                    // Update the board state and trigger animation
-                    board[targetRow, col] = (MoveCount % 2 == 0) ? 1 : 2;
-                    MoveCount++;
-
-                    animationRow = targetRow;
-
-                    // Invalidate to trigger animation
-                    Invalidate();
-
-                    // Pause to simulate animation delay
-                    await Task.Delay(AnimationInterval);
-                }
-            }
-
-            // Animation is complete, update the board state and invalidate
-            board = boardState;
-            isAnimating = false;
-            Invalidate();
-        }
-
-
-
-
-
 
 
         // Helper method to find the next available row in a column
@@ -486,9 +420,9 @@ namespace Client
             return -1; // Column is full
         }
 
-        private void ResetGame()
+        public void ResetGame()
         {
-            // Clear the board
+            // Clear the game board
             for (int row = 0; row < Rows; row++)
             {
                 for (int col = 0; col < Columns; col++)
@@ -496,12 +430,14 @@ namespace Client
                     board[row, col] = 0;
                 }
             }
-
-            // Reset counters and animation state
             MoveCount = 0;
+            currentPlayer = 1; 
+            gameEnded = true;
             isAnimating = false;
+            colMoves.Clear();
 
-            
+            // Trigger repaint to update the UI
+            Invalidate();
         }
 
         public bool CheckWin(int player)

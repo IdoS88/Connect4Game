@@ -37,6 +37,7 @@
             // 
             // pnlButtons
             // 
+            this.pnlButtons.BackColor = System.Drawing.Color.Coral;
             this.pnlButtons.Location = new System.Drawing.Point(149, 22);
             this.pnlButtons.Name = "pnlButtons";
             this.pnlButtons.Size = new System.Drawing.Size(470, 35);
@@ -47,6 +48,8 @@
             // 
             this.gameBoardControl1.AutoSize = true;
             this.gameBoardControl1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.gameBoardControl1.gameEnded = false;
+            this.gameBoardControl1.isAnimating = false;
             this.gameBoardControl1.Location = new System.Drawing.Point(82, 53);
             this.gameBoardControl1.Name = "gameBoardControl1";
             this.gameBoardControl1.Size = new System.Drawing.Size(609, 432);
@@ -55,28 +58,31 @@
             // 
             // NewGame
             // 
+            this.NewGame.BackColor = System.Drawing.Color.DarkKhaki;
             this.NewGame.Location = new System.Drawing.Point(12, 135);
             this.NewGame.Name = "NewGame";
             this.NewGame.Size = new System.Drawing.Size(117, 60);
             this.NewGame.TabIndex = 2;
             this.NewGame.Text = "New Game";
-            this.NewGame.UseVisualStyleBackColor = true;
+            this.NewGame.UseVisualStyleBackColor = false;
             this.NewGame.Click += new System.EventHandler(this.NewGame_Click);
             // 
             // LoadGame
             // 
-            this.LoadGame.Location = new System.Drawing.Point(12, 259);
+            this.LoadGame.BackColor = System.Drawing.Color.DarkKhaki;
+            this.LoadGame.Location = new System.Drawing.Point(651, 135);
             this.LoadGame.Name = "LoadGame";
             this.LoadGame.Size = new System.Drawing.Size(117, 60);
             this.LoadGame.TabIndex = 3;
             this.LoadGame.Text = "Load Game";
-            this.LoadGame.UseVisualStyleBackColor = true;
+            this.LoadGame.UseVisualStyleBackColor = false;
             this.LoadGame.Click += new System.EventHandler(this.LoadGame_Click);
             // 
             // View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Coral;
             this.ClientSize = new System.Drawing.Size(813, 487);
             this.Controls.Add(this.LoadGame);
             this.Controls.Add(this.NewGame);

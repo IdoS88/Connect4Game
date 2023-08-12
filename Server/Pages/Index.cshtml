@@ -1,0 +1,33 @@
+﻿@page
+@model IdoShamir_EyalCohen_Connect4.Pages.IndexModel
+@{
+    @*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+    ViewData["Title"] = "Welcome Page";
+}
+<h1>Welcome to 4 Connect Website</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<h3>Please enter a Player User Id below</h3>
+<form method="post">
+    <div class="row">
+        <div class="col-md-3">
+            @Html.LabelFor(m=>m.PlayerLogin.Id, new{@class="control-label"})
+        </div>
+        </div>
+        <div class="row mb-4">
+        <div class="col-md-3">
+            @Html.TextBoxFor(m=>m.PlayerLogin.Id, new{@type="number", @min="1", @max=Int16.MaxValue, @class="form-control"})
+            @Html.ValidationMessageFor(m=>m.PlayerLogin.Id, "", new{@class="text-danger"})
+        </div>
+        </div>
+
+    <div class="form-group">
+        <input type="submit" value="Log in" class="btn btn-primary" autofocus />
+    </div>
+</form>
+

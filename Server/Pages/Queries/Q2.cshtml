@@ -1,0 +1,47 @@
+﻿@page
+@model IdoShamir_EyalCohen_Connect4.Pages.Queries.Q2Model
+
+@{
+    ViewData["Title"] = "Q2";
+}
+
+<h1>Q2</h1>
+
+@*Query 2 - List of all player, case sensitive by name and also last game date (name,date) cols*@
+
+<br />
+<br />
+
+<a asp-page="../Index">Back To Login Welcome Page</a> | <a asp-page="./Queries">Back To Queries</a>
+
+<br />
+
+<h1>@Html.DisplayTextFor(model=>model.QueryName)</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Q2List[0].PlayerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Q2List[0].DateInit)
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Q2List)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PlayerName)
+                </td>
+                <td>
+                    @item.DateInit
+                </td>
+
+
+            </tr>
+        }
+    </tbody>
+</table>

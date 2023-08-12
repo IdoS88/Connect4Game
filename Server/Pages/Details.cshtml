@@ -1,0 +1,45 @@
+﻿@page
+@model IdoShamir_EyalCohen_Connect4.Pages.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>NewPlayerRegister</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GamePlayer.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model =>model.GamePlayer.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GamePlayer.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GamePlayer.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GamePlayer.Phone)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GamePlayer.Phone)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GamePlayer.CountrySelection)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GamePlayer.CountrySelection)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.GamePlayer?.Id">Edit</a> |
+    <a asp-page="./Delete" asp-route-id="@Model.GamePlayer?.Id">Delete</a> |
+    <a asp-page="./Index">Back to Login Page</a> | 
+    <a asp-page="./Queries/Queries">Click for viewing the Queries</a>
+</div>

@@ -1,0 +1,51 @@
+﻿@page
+@model IdoShamir_EyalCohen_Connect4.Pages.Queries.QueriesModel
+
+@{
+    ViewData["Title"] = "Queries";
+}
+
+<h1>Queries</h1>
+
+<p>
+    <a asp-page="../Create">Create New Player</a>
+</p>
+
+<div class="col-2 mb-4 center">
+    <h3>Please click on a button to view the query</h3>
+    <form action="" method="post">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <button asp-page="" asp-page-handler="q1" class="btn btn-primary" autofocus>Q1</button>
+                    <th>
+                        <button asp-page="" asp-page-handler="q2" class="btn btn-primary" autofocus>Q2</button>
+                    </th>
+                    <th>
+                        <button asp-page="" asp-page-handler="q3" class="btn btn-primary" autofocus>Q3</button>
+                    </th>
+                    <th>
+                        <button asp-page="" asp-page-handler="q4" class="btn btn-primary" autofocus>Q4</button>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <button asp-page="" asp-page-handler="q5" class="btn btn-primary" autofocus>Q5</button>
+                    </th>
+                    <th>
+                        <button asp-page="" asp-page-handler="q6" class="btn btn-primary" autofocus>Q6</button>
+                    </th>
+                    <th>
+                        <button asp-page="" asp-page-handler="q7" class="btn btn-primary" autofocus>Q7</button>
+                    </th>
+                    <th>
+                        <button asp-page="" asp-page-handler="q8" class="btn btn-primary" autofocus>Q8</button>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </form>
+</div>
+
+

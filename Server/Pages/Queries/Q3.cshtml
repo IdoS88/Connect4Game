@@ -1,0 +1,66 @@
+﻿@page
+@model IdoShamir_EyalCohen_Connect4.Pages.Queries.Q3Model
+
+@{
+    ViewData["Title"] = "Q3";
+}
+
+<h1>Q3</h1>
+
+<br />
+<br />
+
+<a asp-page="../Index">Back To Login Welcome Page</a> | <a asp-page="./Queries">Back To Queries</a>
+
+<br />
+
+<h1>@Html.DisplayTextFor(model=>model.QueryName)</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].PlayerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GameId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].DateInit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].TimePlayed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GameStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Game)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PlayerId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GameId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateInit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimePlayed)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GameStatus)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.GameId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.GameId">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.GameId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

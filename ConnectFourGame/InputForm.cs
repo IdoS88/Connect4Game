@@ -18,6 +18,12 @@ namespace Client
             InitializeComponent();
         }
 
+        public int getID()
+        {
+            
+            return int.Parse(textBox2.Text);
+        }
+
         public string GetName()
         {
             return textBox1.Text;
@@ -46,6 +52,11 @@ namespace Client
                 // Show an error message if the input is empty or contains only whitespace
                 MessageBox.Show("Name should contain at least one character.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

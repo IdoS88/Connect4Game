@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 // View.cs
 
 namespace Client
@@ -22,24 +23,21 @@ namespace Client
         public bool isEnterPressed = false;
 
         string name = null;
+        int id;
         string connString = null;
         private Stopwatch gameTimer;
         string connectionString = "Data Source = localhost\\MSSQLSERVER01;Initial Catalog = ServerDB; Integrated Security = True";
 
         public View()
         {
-
             InitializeComponent();
-            
             gameTimer = new Stopwatch();
-
-
-
         }
 
-        private void AddButtonsToPanel(string name)
+        private void AddButtonsToPanel(int colLoad ,string name)
         {
-            if (!String.IsNullOrEmpty(name))
+            int loadCol = colLoad;
+            if (!String.IsNullOrEmpty(name) || name == "loadGame")
             {
                 for (int col = 0; col < GameBoardControl.Columns; col++)
                 {
@@ -51,24 +49,23 @@ namespace Client
                     button.Click += (sender, e) =>
                     {
                         int column = Array.IndexOf(pnlButtons.Controls.OfType<Button>().ToArray(), (Button)sender);
-                        // The column variable will give you the index of the clicked button
-                        // Call a method in the GameBoardControl to handle disc dropping
 
-                        gameBoardControl1.DropDisc(column, name);
-
-
+                        gameBoardControl1.DropDisc(column, name);    
                     };
-
                     // Add the button to the panel
                     pnlButtons.Controls.Add(button);
                 }
             }
-            
+            if (colLoad != -1)
+            {
+                gameBoardControl1.DropDisc(loadCol, "loadGame");
+            }
+
         }
 
 
 
-        private bool IsNameAlreadyExists(string name)
+        private bool IsNameAlreadyExists(string name, int ID)
         {
             // Set up a connection to your database
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -76,13 +73,13 @@ namespace Client
                 connection.Open();
 
                 // Write the query to check if the name exists
-                string query = "SELECT COUNT(*) FROM Player WHERE Name = @Name";
+                string query = "SELECT COUNT(*) FROM Player WHERE Id = @Id";
 
                 // Create a command object
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     // Add the name parameter to the command
-                    command.Parameters.AddWithValue("@Name", name);
+                    command.Parameters.AddWithValue("@Id", ID);
 
                     // Execute the query and retrieve the result
                     int count = (int)command.ExecuteScalar();
@@ -112,27 +109,42 @@ namespace Client
 
         }
 
-        private async void LoadGame_Click(object sender, EventArgs e)
+        private void LoadGame_Click(object sender, EventArgs e)
         {
             using (var loadGameForm = new LoadGames())
             {
                 var result = loadGameForm.ShowDialog(); // Open the LoadGame form
+                
 
                 if (result == DialogResult.OK)
                 {
+                    
                     // Get the selected game data from the LoadGame form
-                    GameBoardState selectedGameBoardState = loadGameForm.SelectedGameBoardState;
+                    string[] selectedGameBoardState = loadGameForm.SelectedGameBoardState;
+                    foreach (var gameBoardState in selectedGameBoardState)
+                    {
 
-                    // Restore the selected game on the GameBoardControl
-                    await gameBoardControl1.RestoreGameAndAnimateMoves(selectedGameBoardState);
+                        int column = int.Parse(gameBoardState);
+                        //gameBoardControl1.MoveCount++;
+                        if (gameBoardControl1.currentPlayer == 1)
+                        {
+                            AddButtonsToPanel(column, "loadGame");
+                        }
+                        else
+                        {
+                            gameBoardControl1.DropDisc(column, "loadGame");
+                        }
+                        
+                    }                   
                 }
             }
         }
 
         private void NewGame_Click(object sender, EventArgs e)
         {
-            if (isFirstRun)
+            if (isFirstRun || gameBoardControl1.gameEnded == true)
             {
+                gameBoardControl1.gameEnded = false;
                 isFirstRun = false;
                 // Create an instance of the input form
                 InputForm inputForm = new InputForm();
@@ -145,12 +157,13 @@ namespace Client
                 {
                     // Retrieve the input from the input form
                     name = inputForm.GetName();
+                    id = inputForm.getID();
 
                     // Validate the input
                     if (!string.IsNullOrEmpty(name) && name.Length > 0 && !int.TryParse(name, out _))
                     {
                         // Check if the name already exists
-                        if (IsNameAlreadyExists(name))
+                        if (IsNameAlreadyExists(name,id))
                         {
                             isFirstRun = true;
                             // Prompt for a different name
@@ -159,7 +172,7 @@ namespace Client
                         else
                         {
                             // Start the game or perform further actions with the name
-                            AddButtonsToPanel(name);
+                            AddButtonsToPanel(-1,name);
                         }
                     }
                     else
@@ -171,7 +184,7 @@ namespace Client
                 }
             }
 
-             AddButtonsToPanel(name);
+             AddButtonsToPanel(-1,name);
              
               
         }
