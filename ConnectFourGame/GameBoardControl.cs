@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Client.Models.Extentions;
+using Client.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -37,7 +39,6 @@ namespace Client
         private Timer animationTimer;
         private Timer computerMoveTimer;
 
-        private Random random = new Random();
         public bool gameEnded { get; set; }
         private DateTime gameStartTime;
 
@@ -47,11 +48,14 @@ namespace Client
         private const int AnimationInterval = 100; // Adjust this value for the animation speed
         string connectionString = "Data Source = localhost\\MSSQLSERVER01;Initial Catalog = ServerDB; Integrated Security = True";
 
-  
+        //services
+        GameService gameService;
 
 
         public GameBoardControl()
         {
+            Uri url = new Uri("https://localhost:7151/");
+            gameService = new GameService(url);
             // Calculate the size of the game board
             int boardWidth = Columns * (CellSize + Padding) - Padding;
             int boardHeight = Rows * (CellSize + Padding) - Padding;
@@ -83,7 +87,7 @@ namespace Client
         }
 
 
-        
+
         private void AnimationTimer_Tick(object sender, EventArgs e)
         {
             if (gameEnded)
@@ -119,30 +123,32 @@ namespace Client
                     Invalidate();
                 }
             }
-           
+
         }
-         
-        private void ComputerMoveTimer_Tick(object sender, EventArgs e)
+
+        private async void ComputerMoveTimer_Tick(object sender, EventArgs e)
         {
-            if (gameEnded) 
+            if (gameEnded)
             {
                 return;
             }
             // Check if it's currently the computer's turn
             if (currentPlayer == 2)
             {
-                
+
                 //isAnimating = true;
                 //animationRow = 0;
-                
+
                 // Make a move for the computer player
-                int computerMove = GetRandomComputerMove(board);
+                int computerMove = await GetRandomComputerMove();
+                while (computerMove == -1)
+                    computerMove = await GetRandomComputerMove();
 
                 if (computerMove != -1)
                 {
-                    
-                    DropDisc(computerMove,"Computer",0);
-                   
+
+                    DropDisc(computerMove, "Computer", 0);
+
                 }
                 else
                 {
@@ -151,38 +157,42 @@ namespace Client
                     // Reset the game or take any other necessary actions
                     return;
                 }
-            }  
+            }
         }
-        
-   
+
+
         private double GetGameDuration()
         {
             return gameTimer.Elapsed.TotalSeconds;
         }
 
 
-        private int GetRandomComputerMove(int[,] board)
+        private async Task<int> GetRandomComputerMove()
         {
-            // Generate a list of available columns where the computer can drop its disc
-            List<int> availableColumns = new List<int>();
-            for (int col = 0; col < Columns; col++)
-            {  
-                if (GetNextAvailableColumn(col) != -1)
-                {
-                    availableColumns.Add(col);
-                }
-            }
-            if (availableColumns.Count > 0)
-            {
-                // Randomly select one column from the list of available columns
-                int randomIndex = random.Next(0, availableColumns.Count);
-                return availableColumns[randomIndex];
-            }
-            else
-            {
-                // No available moves, return -1
-                return -1;
-            }
+            int move = await gameService.GetComputerMove();
+            if (GetNextAvailableColumn(move) != -1)
+                return move;
+            return -1;
+            //// Generate a list of available columns where the computer can drop its disc
+            //List<int> availableColumns = new List<int>();
+            //for (int col = 0; col < Columns; col++)
+            //{  
+            //    if (GetNextAvailableColumn(col) != -1)
+            //    {
+            //        availableColumns.Add(col);
+            //    }
+            //}
+            //if (availableColumns.Count > 0)
+            //{
+            //    // Randomly select one column from the list of available columns
+            //    int randomIndex = random.Next(0, availableColumns.Count);
+            //    return availableColumns[randomIndex];
+            //}
+            //else
+            //{
+            //    // No available moves, return -1
+            //    return -1;
+            //}
         }
 
         private int GetNextAvailableColumn(int col)
@@ -262,9 +272,9 @@ namespace Client
             }
         }
 
-        public void SaveGameRecord(GameRecords gameRecord)
+        public void SaveGameRecord(GameRecords gameRecord, string status)
         {
-            
+
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -310,7 +320,7 @@ namespace Client
 
         }
 
-        public void DropDisc(int column, string name,int id)
+        public async void DropDisc(int column, string name, int id)
         {
             if (isAnimating || column < 0 || column >= Columns)
             {
@@ -332,7 +342,7 @@ namespace Client
             Console.WriteLine("Current Player: " + currentPlayer); // Add this line
 
             // Record the move in colMoves
-            colMoves.Add(column);   
+            colMoves.Add(column);
 
             // Start the animation
             gameEnded = false;
@@ -346,13 +356,13 @@ namespace Client
             string loadChecker = "loadGame";
 
             // Check for a win after updating the board and recording the move
-            if (name != loadChecker && CheckWin(currentPlayer) )
+            if (name != loadChecker && CheckWin(currentPlayer))
             {
                 gameEnded = true;
 
                 string winner = (currentPlayer == 1) ? "Player 1" : "Computer";
                 MessageBox.Show($"{winner} wins!", "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
+
                 double gameDuration = GetGameDuration();
                 StoreGameDuration(gameDuration);
 
@@ -363,19 +373,21 @@ namespace Client
                     StartTime = DateTime.Now,
                     Duration = (int)gameDuration,
                     GameMoves = gameMovesString
+
                 };
 
-                SaveGameRecord(gameRecord);
+                SaveGameRecord(gameRecord, winner);
+                await gameService.AddGame(gameRecord.ToDto(winner));
                 ResetGame();
                 colMoves.Clear();
-                
+
             }
             MoveCount++;
         }
 
         internal string[] GetGameBoardState(int gameId)
         {
-           
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = "SELECT GameMoves FROM GameRecords WHERE GameRecordId = @GameRecordId";
@@ -409,7 +421,7 @@ namespace Client
                 // Column index is out of bounds, return an error code or handle as needed
                 return -1;
             }
-            for (int row = Rows -1 ; row >= 0; row--)
+            for (int row = Rows - 1; row >= 0; row--)
             {
                 if (board[row, column] == 0)
                 {
@@ -430,7 +442,7 @@ namespace Client
                 }
             }
             MoveCount = 0;
-            currentPlayer = 1; 
+            currentPlayer = 1;
             gameEnded = true;
             isAnimating = false;
             colMoves.Clear();

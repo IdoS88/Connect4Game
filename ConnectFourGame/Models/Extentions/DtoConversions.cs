@@ -27,14 +27,14 @@ namespace Client.Models.Extentions
 
         }
 
-        public static IEnumerable<GameDTO> ConvertToDtos(this IEnumerable<Game> games)
-        {
-            return games.Aggregate(new List<GameDTO>(), (list, game) =>
-            {
-                list.Add(game.ToDto());
-                return list;
-            });
-        }
+        //public static IEnumerable<GameDTO> ConvertToDtos(this IEnumerable<Game> games)
+        //{
+        //    return games.Aggregate(new List<GameDTO>(), (list, game) =>
+        //    {
+        //        list.Add(game.ToDto());
+        //        return list;
+        //    });
+        //}
 
         public static IEnumerable<Game> ConvertToGames(this IEnumerable<GameDTO> games)
         {
@@ -67,16 +67,15 @@ namespace Client.Models.Extentions
             };
         }
 
-        public static GameDTO ToDto(this Game game)
+        public static GameDTO ToDto(this GameRecords game, string status)
         {
             return new GameDTO
             {
-                GameId = game.GameId,
-                GameStatus = game.GameStatus,
-                PlayerId = game.PlayerId,
-                DateInit = game.DateInit,
-                TimePlayed = game.TimePlayed
-
+                GameId = 0,
+                PlayerId = game.PlayerID,
+                DateInit = game.StartTime,
+                TimePlayed = game.Duration,
+                GameStatus = status,
             };
         }
         public static UpdateGameDTO ToPatchDto(this Game game)

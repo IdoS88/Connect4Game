@@ -7,10 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "ConnectFourGame\C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdoShamir_EyalCohen_Connect4", "Server\IdoShamir_EyalCohen_Connect4.csproj", "{8AFCD614-06AC-4CD3-861A-5570FDFE27B1}"
 	ProjectSection(ProjectDependencies) = postProject
-		{BE842270-5B01-42FF-94F6-01758E6F42D5} = {BE842270-5B01-42FF-94F6-01758E6F42D5}
+		{7BB97E90-96A8-4E85-B7D6-9B9773E183B3} = {7BB97E90-96A8-4E85-B7D6-9B9773E183B3}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "..\..\IdoShamir-EyalCohen-Connect4\Models\Models.csproj", "{BE842270-5B01-42FF-94F6-01758E6F42D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{7BB97E90-96A8-4E85-B7D6-9B9773E183B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,10 +26,10 @@ Global
 		{8AFCD614-06AC-4CD3-861A-5570FDFE27B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AFCD614-06AC-4CD3-861A-5570FDFE27B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AFCD614-06AC-4CD3-861A-5570FDFE27B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BE842270-5B01-42FF-94F6-01758E6F42D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE842270-5B01-42FF-94F6-01758E6F42D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE842270-5B01-42FF-94F6-01758E6F42D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE842270-5B01-42FF-94F6-01758E6F42D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BB97E90-96A8-4E85-B7D6-9B9773E183B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BB97E90-96A8-4E85-B7D6-9B9773E183B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BB97E90-96A8-4E85-B7D6-9B9773E183B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BB97E90-96A8-4E85-B7D6-9B9773E183B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
