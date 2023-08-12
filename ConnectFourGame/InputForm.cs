@@ -20,8 +20,15 @@ namespace Client
 
         public int getID()
         {
-            
-            return int.Parse(textBox2.Text);
+            try
+            {
+                return int.Parse(textBox2.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Invalid Id Input.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return -1;
+            }
         }
 
         public string GetName()

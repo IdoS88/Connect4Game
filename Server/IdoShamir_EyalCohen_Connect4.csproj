@@ -17,7 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\IdoShamir-EyalCohen-Connect4\Models\Models.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
+
+
 
 </Project>

@@ -1,7 +1,6 @@
 ﻿
 
 using IdoShamir_EyalCohen_Connect4.Data;
-using Models.Dtos;
 using Models.Models;
 using Models.Models.Dtos;
 

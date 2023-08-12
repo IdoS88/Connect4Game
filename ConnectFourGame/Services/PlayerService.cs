@@ -58,8 +58,9 @@ namespace Client.Services
             {
 
                 MessageBox.Show(ex.Message, "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
             }
-            return null;
+            return null; 
 
         }
 

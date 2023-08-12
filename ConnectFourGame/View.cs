@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,18 +25,23 @@ namespace Client
         public bool isEnterPressed = false;
 
         string name = null;
-        int id;
+        public int id;
         string connString = null;
         private Stopwatch gameTimer;
-        string connectionString = "Data Source = localhost\\MSSQLSERVER01;Initial Catalog = ServerDB; Integrated Security = True";
-
+        string connectionString = "Data Source=DESKTOP-NKD4OVM;Initial Catalog=ServerDB;Integrated Security=True"
+        //string connectionString = "Data Source = localhost\\MSSQLSERVER01;Initial Catalog = ServerDB; Integrated Security = True";
+        PlayerService playerService;
+        GameService gameService;
         public View()
         {
             InitializeComponent();
             gameTimer = new Stopwatch();
+            Uri url = new Uri("https://localhost:7151/");
+            playerService = new PlayerService(url);
+            gameService = new GameService(url);
         }
 
-        private void AddButtonsToPanel(int colLoad ,string name,int id)
+        private void AddButtonsToPanel(int colLoad, string name, int id)
         {
             int loadCol = colLoad;
             if (!String.IsNullOrEmpty(name) || name == "loadGame")
@@ -50,7 +57,7 @@ namespace Client
                     {
                         int column = Array.IndexOf(pnlButtons.Controls.OfType<Button>().ToArray(), (Button)sender);
 
-                        gameBoardControl1.DropDisc(column, name,id);    
+                        gameBoardControl1.DropDisc(column, name, id);
                     };
                     // Add the button to the panel
                     pnlButtons.Controls.Add(button);
@@ -58,36 +65,41 @@ namespace Client
             }
             if (colLoad != -1)
             {
-                gameBoardControl1.DropDisc(loadCol, "loadGame",id);
+                gameBoardControl1.DropDisc(loadCol, "loadGame", id);
             }
 
         }
 
 
 
-        private bool IsNameAlreadyExists(string name, int ID)
+        private async Task<bool> IsIdAlreadyExists(string name, int ID)
         {
-            // Set up a connection to your database
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
 
-                // Write the query to check if the name exists
-                string query = "SELECT COUNT(*) FROM Player WHERE Id = @Id";
 
-                // Create a command object
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    // Add the name parameter to the command
-                    command.Parameters.AddWithValue("@Id", ID);
+            if (await playerService.GetPlayer(ID) != null)
+                return true;
+            return false;
+            //// Set up a connection to your database
+            //using (SqlConnection connection = new SqlConnection(connectionString))
+            //{
+            //    connection.Open();
 
-                    // Execute the query and retrieve the result
-                    int count = (int)command.ExecuteScalar();
+            //    // Write the query to check if the name exists
+            //    string query = "SELECT COUNT(*) FROM Player WHERE Id = @Id";
 
-                    // Check if the name already exists
-                    return count > 0;
-                }
-            }
+            //    // Create a command object
+            //    using (SqlCommand command = new SqlCommand(query, connection))
+            //    {
+            //        // Add the name parameter to the command
+            //        command.Parameters.AddWithValue("@Id", ID);
+
+            //        // Execute the query and retrieve the result
+            //        int count = (int)command.ExecuteScalar();
+
+            //        // Check if the name already exists
+            //        return count > 0;
+            //    }
+            //}
         }
 
 
@@ -95,9 +107,9 @@ namespace Client
 
 
         private void View_Load(object sender, EventArgs e)
-            {
-                
-            }
+        {
+
+        }
 
         private void gameBoardControl1_Load(object sender, EventArgs e)
         {
@@ -114,11 +126,11 @@ namespace Client
             using (var loadGameForm = new LoadGames())
             {
                 var result = loadGameForm.ShowDialog(); // Open the LoadGame form
-                
+
 
                 if (result == DialogResult.OK)
                 {
-                    
+
                     // Get the selected game data from the LoadGame form
                     string[] selectedGameBoardState = loadGameForm.SelectedGameBoardState;
                     foreach (var gameBoardState in selectedGameBoardState)
@@ -134,14 +146,15 @@ namespace Client
                         {
                             gameBoardControl1.DropDisc(column, "loadGame", id);
                         }
-                        
-                    }                   
+
+                    }
                 }
             }
         }
 
-        private void NewGame_Click(object sender, EventArgs e)
+        private async void NewGame_Click(object sender, EventArgs e)
         {
+
             if (isFirstRun || gameBoardControl1.gameEnded == true)
             {
                 gameBoardControl1.gameEnded = false;
@@ -161,33 +174,34 @@ namespace Client
                     Console.WriteLine(id);
 
                     // Validate the input
-                    if (!string.IsNullOrEmpty(name) && name.Length > 0 && !int.TryParse(name, out _))
+                    if (!string.IsNullOrEmpty(name) && name.Length > 0 && id != -1)
                     {
                         // Check if the name already exists
-                        if (IsNameAlreadyExists(name,id))
+                        if (await IsIdAlreadyExists(name, id) == true)
                         {
-                            isFirstRun = true;
+                            isFirstRun = false;
                             // Prompt for a different name
-                            MessageBox.Show("Name already exists. Please enter a different name.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         else
                         {
+                            isFirstRun = true;
+                            return;
                             // Start the game or perform further actions with the name
-                            AddButtonsToPanel(-1,name,id);
+                            // AddButtonsToPanel(-1,name,id);
                         }
                     }
                     else
                     {
+                        MessageBox.Show("name should be at least 2 characters. please try again", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         isFirstRun = true;
-                        // Show an error message if the input is empty or contains only whitespace
-                        MessageBox.Show("Name should contain at least one character.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
                     }
                 }
             }
 
-             AddButtonsToPanel(-1,name, id);
-             
-              
+            AddButtonsToPanel(-1, name, id);
+
+
         }
         private void NewGame_MouseUp(object sender, MouseEventArgs e)
         {
