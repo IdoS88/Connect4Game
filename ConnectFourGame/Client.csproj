@@ -74,9 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cell.cs" />
     <Compile Include="Controller.cs" />
-    <Compile Include="Disc.cs" />
     <Compile Include="GameBoardControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -97,7 +95,6 @@
     <Compile Include="LoadGames.Designer.cs">
       <DependentUpon>LoadGames.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model.cs" />
     <Compile Include="Models\Dtos\GameDTO.cs" />
     <Compile Include="Models\Dtos\Interfaces\IGameDTO.cs" />
     <Compile Include="Models\Dtos\PlayerDTO.cs" />

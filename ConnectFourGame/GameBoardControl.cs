@@ -23,6 +23,7 @@ namespace Client
         public const int Columns = 7;
         public const int CellSize = 60;
         public const int Padding = 10;
+        
 
         private int[,] board; // 2D array to keep track of the state of each cell
         public int currentPlayer = 1;
@@ -44,6 +45,7 @@ namespace Client
 
         List<int> colMoves = new List<int>();
         string[] moves;
+        public int realID { get; set; }
 
         private const int AnimationInterval = 100; // Adjust this value for the animation speed
         string connectionString = "Data Source = localhost\\MSSQLSERVER01;Initial Catalog = ServerDB; Integrated Security = True";
@@ -147,7 +149,7 @@ namespace Client
                 if (computerMove != -1)
                 {
 
-                    DropDisc(computerMove, "Computer", 0);
+                    DropDisc(computerMove, "Computer", realID);
 
                 }
                 else
@@ -173,26 +175,6 @@ namespace Client
             if (GetNextAvailableColumn(move) != -1)
                 return move;
             return -1;
-            //// Generate a list of available columns where the computer can drop its disc
-            //List<int> availableColumns = new List<int>();
-            //for (int col = 0; col < Columns; col++)
-            //{  
-            //    if (GetNextAvailableColumn(col) != -1)
-            //    {
-            //        availableColumns.Add(col);
-            //    }
-            //}
-            //if (availableColumns.Count > 0)
-            //{
-            //    // Randomly select one column from the list of available columns
-            //    int randomIndex = random.Next(0, availableColumns.Count);
-            //    return availableColumns[randomIndex];
-            //}
-            //else
-            //{
-            //    // No available moves, return -1
-            //    return -1;
-            //}
         }
 
         private int GetNextAvailableColumn(int col)
@@ -327,6 +309,7 @@ namespace Client
                 // Animation is already in progress, invalid column index, or game has ended, do nothing
                 return;
             }
+            Console.WriteLine(id);
 
             // Find the next available row in the specified column
             int row = GetNextAvailableRow(column);
@@ -364,7 +347,7 @@ namespace Client
                 MessageBox.Show($"{winner} wins!", "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 double gameDuration = GetGameDuration();
-                StoreGameDuration(gameDuration);
+               // StoreGameDuration(gameDuration);
 
                 string gameMovesString = string.Join(",", colMoves);
                 GameRecords gameRecord = new GameRecords

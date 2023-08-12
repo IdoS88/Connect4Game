@@ -28,8 +28,8 @@ namespace Client
         public int id;
         string connString = null;
         private Stopwatch gameTimer;
-        string connectionString = "Data Source=DESKTOP-NKD4OVM;Initial Catalog=ServerDB;Integrated Security=True"
-        //string connectionString = "Data Source = localhost\\MSSQLSERVER01;Initial Catalog = ServerDB; Integrated Security = True";
+       // string connectionString = "Data Source=DESKTOP-NKD4OVM;Initial Catalog=ServerDB;Integrated Security=True"
+        string connectionString = "Data Source = localhost\\MSSQLSERVER01;Initial Catalog = ServerDB; Integrated Security = True";
         PlayerService playerService;
         GameService gameService;
         public View()
@@ -79,27 +79,6 @@ namespace Client
             if (await playerService.GetPlayer(ID) != null)
                 return true;
             return false;
-            //// Set up a connection to your database
-            //using (SqlConnection connection = new SqlConnection(connectionString))
-            //{
-            //    connection.Open();
-
-            //    // Write the query to check if the name exists
-            //    string query = "SELECT COUNT(*) FROM Player WHERE Id = @Id";
-
-            //    // Create a command object
-            //    using (SqlCommand command = new SqlCommand(query, connection))
-            //    {
-            //        // Add the name parameter to the command
-            //        command.Parameters.AddWithValue("@Id", ID);
-
-            //        // Execute the query and retrieve the result
-            //        int count = (int)command.ExecuteScalar();
-
-            //        // Check if the name already exists
-            //        return count > 0;
-            //    }
-            //}
         }
 
 
@@ -172,6 +151,7 @@ namespace Client
                     name = inputForm.GetName();
                     id = inputForm.getID();
                     Console.WriteLine(id);
+                    gameBoardControl1.realID = id;
 
                     // Validate the input
                     if (!string.IsNullOrEmpty(name) && name.Length > 0 && id != -1)
